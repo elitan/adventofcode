@@ -58,7 +58,7 @@ for i in range(100):
 
 	grid = tmp_grid
 
-p1 = 0
+p2 = 0
 for r in tmp_grid:
-	p1 += sum(r)
-print(p1)
+	p2 += sum(r)
+print(p2)
