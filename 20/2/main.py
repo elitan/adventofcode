@@ -16,7 +16,7 @@ def divisors(n):
 
 target = 36000000
 i = 1
-while reduce(lambda x,y: x + int(i / y < 50) * y * 11, divisors(i)) < target:
+while reduce(lambda x,y: x + int(i / y <= 50) * y * 11, divisors(i)) < target:
 	i += 1
 
 print(i)
