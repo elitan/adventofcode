@@ -11,9 +11,17 @@ def gen(containers):
 containers = map(int, [ f.rstrip() for f in open('input')])
 
 p1 = 0
+target = 150
+sums = dict()
 for c in gen(containers):
 	s = [a*b for a,b in zip(containers,c)]
 
-	if sum(s) == 150:
+	if sum(s) == target:
 		p1 += 1
+		c_sum = sum(c)
+		if c_sum in sums:
+			sums[c_sum] += 1
+		else:
+			sums[c_sum] = 1
 print(p1)
+print(sums)
