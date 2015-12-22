@@ -6,8 +6,6 @@ class Game:
 		self.player = Player(name="Player", hp = 50, mana = 500)
 		self.boss = Player(name="Boss", hp = 51, damage = 9)
 		self.hard_mode = hard_mode
-		#self.player = Player(name="Player", hp = 10, mana = 250)
-		#self.boss = Player(name="Boss", hp = 14, damage = 8)
 
 		self.items = list()
 		self.items.append(Item(name = "Recharge", mana_cost = 229, rounds = 5, mana_recharge = 101))
@@ -20,13 +18,18 @@ class Game:
 		self.minimax(copy.deepcopy(self), 0, True)
 
 	def game_ended(self):
-		return self.player.hp <= 0 or self.boss.hp <= 0
+		global least_mana_spent
+
+		r = self.player.hp <= 0 or self.boss.hp <= 0
+		if r:
+			if self.player_won():
+				least_mana_spent = min(least_mana_spent, self.player.mana_spent)
+		return r
 
 	def player_won(self):
 		return self.player.hp > self.boss.hp
 
 	def take_turn(self):
-
 		remove_index = list()
 
 		# player
@@ -70,75 +73,34 @@ class Game:
 		return False
 
 	# player = True, boss = False
-	def minimax(self, node, depth, players_turn):
-		global least_mana_spent
-
-		if players_turn:
-			#print("-- Player turn (depth: %d) --" % depth)
-			pass
-		else:
-			#print("-- Boss turn (depth: %d) --" % depth)
-			pass
-		#print(node.player)
-		#print(node.boss)
-
-
-		if node.hard_mode:
+	def minimax(self, node, depth, players_turn):		
+		if node.hard_mode and players_turn:
 			node.player.take_damage(1)
 
 		if node.game_ended():
-			#print("-- end game --")
-			if node.player_won():
-				print("player won! mana spent: %d" % (node.player.mana_spent))
-				least_mana_spent = min(least_mana_spent, node.player.mana_spent)
-				if node.player.mana_spent < least_mana_spent:
-					least_mana_spent = node.player.mana_spent
-					print(">>>> least mana spent: %d" % (least_mana_spent))
-				print("#####################")
-				print(node.player)
-				print(node.boss)
-				print("#####################")
-			#sys.exit()
 			return 
 
 		if node.player.mana_spent > least_mana_spent:
 			return
 
-
 		# effects
 		node.take_turn()
 
 		if node.game_ended():
-			#print("-- end game --")
-			if node.player_won():
-				print("player won! mana spent: %d" % (node.player.mana_spent))
-				least_mana_spent = min(least_mana_spent, node.player.mana_spent)
-				if node.player.mana_spent < least_mana_spent:
-					least_mana_spent = node.player.mana_spent
-					print(">>>> least mana spent: %d" % (least_mana_spent))
-				print("#####################")
-				print(node.player)
-				print(node.boss)
-				print("#####################")
-			#sys.exit()
 			return
 
 		if players_turn:
 			for item in self.items:
-				# check if item already in use
 				if node.item_in_use(node.player, item) or item.mana_cost > node.player.mana:
 					continue
 				node_new = copy.deepcopy(node)
 				item_tmp = copy.deepcopy(item)
 				item_index = node_new.add_item(item_tmp, node_new.player)
 				node_new.cast_item(item_tmp, item_index, node_new.player, node_new.boss)
-				#print("")
 				self.minimax(node_new, depth+1, not players_turn)
 		else: # boss turn
 			node_new = copy.deepcopy(node)
 			node_new.player.take_damage(node_new.boss.damage)
-			#print("Boss attacks for %d damage!" % (self.boss.damage))
-			#print("")
 			self.minimax(node_new, depth+1, not players_turn)
 
 
@@ -149,11 +111,8 @@ class Player:
 		self.damage = damage
 		self.armor = armor
 		self.mana = mana
-
 		self.mana_spent = 0
-
 		self.items = list()
-
 
 	def add_item(self, item):
 		self.items.append(item)
@@ -190,17 +149,11 @@ class Item:
 
 
 least_mana_spent = sys.maxint
-
 game = Game()
 game.start_game()
+print("p1", least_mana_spent)
 
-print(least_mana_spent)
-
-"""
 least_mana_spent = sys.maxint
-
 game = Game(hard_mode = True)
 game.start_game()
-
-print(least_mana_spent)
-"""
+print("p2", least_mana_spent)
