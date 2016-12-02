@@ -5,13 +5,13 @@ part = 2
 def new_pos(current_pos, instruction):
 	x, y = current_pos
 	if instruction == 'U':
-		y = y + 1
+		y += 1
 	elif instruction == 'R':
-		x = x + 1
+		x += 1
 	elif instruction == 'D':
-		y = y - 1
+		y -= 1
 	elif instruction == 'L':
-		x = x - 1
+		x -= 1
 	if (x, y) in pos_map[part]:
 		return (x, y)
 	else:
