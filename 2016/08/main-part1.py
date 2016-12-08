@@ -4,6 +4,9 @@ import sys
 HEIGHT = 6
 WIDTH = 50
 
+# HEIGHT = 3
+# WIDTH = 7
+
 def n_lit(grid):
 	s = 0
 	for y in range(HEIGHT):
@@ -13,7 +16,8 @@ def n_lit(grid):
 
 def print_grid(grid):
 	for y in range(HEIGHT):
-		print(grid[y])
+		g = list(map(lambda x: '#' if x else '.', grid[y]))
+		print(g)
 	print('')
 
 def generate_grid(x, y):
@@ -25,7 +29,7 @@ def generate_grid(x, y):
 		grid.append(tmp_row)
 	return grid
 
-re_rect = re.compile(r'rect (\d)+x(\d)')
+re_rect = re.compile(r'rect (\d+)+x(\d+)')
 re_rotate = re.compile(r'rotate (row|column) (x|y)=(\d+) by (\d+)')
 with open('in', 'r') as f:
 
