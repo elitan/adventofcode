@@ -7,14 +7,24 @@ re_three_same = re.compile(r'(.)\1\1')
 
 pi = 'yjdafjpo'
 i = 0
+p = 2
 
 counting_map = {}
 found_indexes = []
-max_found_indexes = 64
+max_found_indexes = 80
+
+def get_hash(plain_text, p):
+	if p == 1:
+		return hashlib.md5(plain_text.encode('utf-8')).hexdigest()
+	elif p == 2:
+		h = plain_text
+		for x in range(2017):
+			h = hashlib.md5(h.encode('utf-8')).hexdigest()
+		return h
 
 while len(found_indexes) < max_found_indexes:
 	plain_text = '{}{}'.format(pi, i)
-	h = hashlib.md5(plain_text.encode('utf-8')).hexdigest()
+	h = get_hash(plain_text, p)
 
 	# check still valid
 	remove_keys = []
@@ -27,6 +37,7 @@ while len(found_indexes) < max_found_indexes:
 					# ok key
 					found_indexes.append(counting_map[k]['start_i'])
 					remove_keys.append(k)
+					print(i, found_indexes)
 		if i - counting_map[k]['start_i'] == 1000:
 			remove_keys.append(k)
 
@@ -46,4 +57,4 @@ while len(found_indexes) < max_found_indexes:
 
 	i += 1
 
-print(sorted(found_indexes)[-1])
+print(sorted(found_indexes)[63])
