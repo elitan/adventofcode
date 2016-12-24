@@ -1,49 +1,49 @@
 import hashlib
 import re
 import sys
+import time
 
 re_three_same = re.compile(r'(.)\1\1')
 
-pi = 'abc'
+pi = 'yjdafjpo'
 i = 0
 
 counting_map = {}
+found_indexes = []
+max_found_indexes = 64
 
-while True:
+while len(found_indexes) < max_found_indexes:
 	plain_text = '{}{}'.format(pi, i)
 	h = hashlib.md5(plain_text.encode('utf-8')).hexdigest()
-	print(plain_text, h)
 
 	# check still valid
 	remove_keys = []
 	for k in counting_map:
-		chars = ''.join([ counting_map[k]['char'] for x in range(5)])
-		print('look for: ', chars)
-		if chars in h:
-			counting_map[k]['inner_count'] += 1
-			if counting_map[k]['inner_count'] == 5:
-				# ok key
-				print(k)
-				print(counting_map[k])
-				sys.exit()
-				pass
-		elif i - counting_map[k]['i'] > 1000:
+		if len(found_indexes) < max_found_indexes:
+			chars = ''.join([ counting_map[k]['char'] for x in range(5)])
+			if chars in h:
+				counting_map[k]['inner_count'] += 1
+				if counting_map[k]['inner_count'] == 1: # thought they would edit this count for part 2
+					# ok key
+					found_indexes.append(counting_map[k]['start_i'])
+					remove_keys.append(k)
+		if i - counting_map[k]['start_i'] == 1000:
 			remove_keys.append(k)
-			print('terminate')
-
 
 	for key in remove_keys:
 		del counting_map[key]
+
 
 	# addin new ones
 	m = re_three_same.match(h)
 	m = re.findall(re_three_same, h)
 	if m:
 		counting_map[i] = {
-			'i': i,
+			'start_i': i,
 			'inner_count': 0,
-			'char': m[0]
+			'char': m[0],
 		}
 
 	i += 1
-	input()
+
+print(sorted(found_indexes)[-1])
