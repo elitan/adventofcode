@@ -32,5 +32,8 @@ int main() {
 
 	printf("%d\n", (current_player + 1));
 
+	free(players);
+
+
 	return 0;
 }
