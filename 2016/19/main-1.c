@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int next_player_alive(int current_position, int arr[], int size) {
-	int found = 0;
+int next_player_alive(int current_position, int players[], int players_n) {
 	int i = current_position;
 
 	while (1) {
-		i = (i + 1) % size;
-		if (!arr[i]) {
+		i = (i + 1) % players_n;
+		if (!players[i]) {
 			return i;
 		}
 	}
@@ -33,7 +32,5 @@ int main() {
 	printf("%d\n", (current_player + 1));
 
 	free(players);
-
-
 	return 0;
 }
