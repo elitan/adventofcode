@@ -1,18 +1,27 @@
-def find_next_i(lines, i):
-    for line in lines:
-        a, z = line
-        if a <= i and i < z:
-            found = True
-            i = z + 1
-            return i, False
-    return i, True
+import sys
 
 with open('in', 'r') as fp:
     lines = [list(map(int, line.rstrip().split('-'))) for line in fp]
 
-i = 0
-found = False
-while not found:
-    i, found = find_next_i(lines, i)
+lines.sort(key=lambda x: x[0])
 
-print(i)
+first_found = False
+i = 0
+r = 0
+a, z = 0, 0
+heighst = 2**32 - 1
+for line_i, line in enumerate(lines):
+    if z > line[1]:
+        continue
+    a, z = line
+    if a <= i < z:
+        i = z + 1
+    else:
+        if not first_found:
+            first_found = True
+            print('#1: ', i)
+        r += line[0] - i
+        i = line[1] + 1
+
+r += heighst - z
+print('#2: ', r)
