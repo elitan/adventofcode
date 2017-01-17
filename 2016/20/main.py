@@ -9,7 +9,7 @@ first_found = False
 i = 0
 r = 0
 a, z = 0, 0
-heighst = 2**32 - 1
+heights = 2**32 - 1
 for line_i, line in enumerate(lines):
     if z > line[1]:
         continue
@@ -23,5 +23,5 @@ for line_i, line in enumerate(lines):
         r += line[0] - i
         i = line[1] + 1
 
-r += heighst - z
+r += heights - z
 print('#2: ', r)
