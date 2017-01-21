@@ -1,7 +1,8 @@
 import re
+import sys
+from itertools import permutations
 
 def swap_position(x, y, password):
-    print('swap position:' , x, y)
     password[x], password[y] = password[y], password[x]
     return password
 
@@ -11,7 +12,6 @@ def swap_letter(x, y, password):
     return password
 
 def rotate_based(x, password):
-    print('rotate based ', password)
     i = password.index(x) + 1
     if i > 4:
         i += 1
@@ -35,40 +35,43 @@ def move(x, y, password):
     password.insert(y, tmp_char)
     return password
 
+def scramble(password, lines):
 
-fh = open('in-test', 'r')
+    password = list(password)
+
+    for line in lines:
+        if 'swap position' in line:
+            x, y = list(map(int, re.findall(r'swap position (\d+) with position (\d+)', line)[0]))
+            password = swap_position(x, y, password)
+        elif 'swap letter' in line:
+            x, y = re.findall(r'swap letter (\w+) with letter (\w+)', line)[0]
+            password = swap_letter(x, y, password)
+        elif 'rotate based' in line:
+            x = re.findall(r'rotate based on position of letter (\w+)', line)[0]
+            password = rotate_based(x, password)
+        elif 'rotate' in line:
+            direction, x = re.findall(r'rotate (left|right) (\d+) steps?', line)[0]
+            x = int(x)
+            password = rotate_direction(direction, x, password)
+        elif 'reverse' in line:
+            x, y = list(map(int, re.findall(r'reverse positions (\d+) through (\d+)', line)[0]))
+            password = reverse(x, y, password)
+        elif 'move' in line:
+            x, y = list(map(int, re.findall(r'move position (\d+) to position (\d+)', line)[0]))
+            password = move(x, y, password)
+    return ''.join(password)
+
+
+
 fh = open('in', 'r')
+lines = [line.rstrip() for line in fh]
+fh.close()
 
-password = 'abcde'
 password = 'abcdefgh'
-password = list(password)
-print('start pw: ', password)
-for line in fh:
-    line = line.rstrip()
-    if 'swap position' in line:
-        x, y = list(map(int, re.findall(r'swap position (\d+) with position (\d+)', line)[0]))
-        password = swap_position(x, y, password)
-        print('current pw: ', password)
-    elif 'swap letter' in line:
-        x, y = re.findall(r'swap letter (\w+) with letter (\w+)', line)[0]
-        password = swap_letter(x, y, password)
-        print('current pw: ', password)
-    elif 'rotate based' in line:
-        x = re.findall(r'rotate based on position of letter (\w+)', line)[0]
-        password = rotate_based(x, password)
-        print('current pw: ', password)
-    elif 'rotate' in line:
-        direction, x = re.findall(r'rotate (left|right) (\d+) steps?', line)[0]
-        x = int(x)
-        password = rotate_direction(direction, x, password)
-        print('current pw: ', password)
-    elif 'reverse' in line:
-        x, y = list(map(int, re.findall(r'reverse positions (\d+) through (\d+)', line)[0]))
-        password = reverse(x, y, password)
-        print('current pw: ', password)
-    elif 'move' in line:
-        x, y = list(map(int, re.findall(r'move position (\d+) to position (\d+)', line)[0]))
-        password = move(x, y, password)
-        print('current pw: ', password)
+print(scramble(password, lines))
 
-print('password finished: ', ''.join(password))
+unscramble = 'fbgdceah'
+for perm in permutations(unscramble):
+    if scramble(''.join(perm), lines) == unscramble:
+        print(''.join(perm))
+        sys.exit()
