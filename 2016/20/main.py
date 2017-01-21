@@ -1,16 +1,27 @@
-def find_lowest(numbers):
-	i = 0
-	while True:
-		if i not in numbers:
-			return i
-		i += 1
+import sys
 
-fp = open('in', 'r')
-numbers = set()
-for line in fp:
-	line = line.rstrip()
-	a, z = list(map(int, line.split('-')))
-	for i in range(a, (z + 1)):
-		numbers.add(i)
+with open('in', 'r') as fp:
+    lines = [list(map(int, line.rstrip().split('-'))) for line in fp]
 
-print(find_lowest(numbers))
+lines.sort(key=lambda x: x[0])
+
+first_found = False
+i = 0
+r = 0
+a, z = 0, 0
+heights = 2**32 - 1
+for line_i, line in enumerate(lines):
+    if z > line[1]:
+        continue
+    a, z = line
+    if a <= i < z:
+        i = z + 1
+    else:
+        if not first_found:
+            first_found = True
+            print('#1: ', i)
+        r += line[0] - i
+        i = line[1] + 1
+
+r += heights - z
+print('#2: ', r)
