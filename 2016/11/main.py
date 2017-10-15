@@ -97,7 +97,6 @@ def checkValidStates(states, steps):
 
     state_string_must_contain = stateToString(getState(steps + 1))
 
-
     for state in states:
         state_string = stateToString(state)
 
@@ -336,14 +335,24 @@ def generatePossibleStates(state, states_visited):
                 # add the new state to possible states
                 possible_states.append([new_floors, elevator_floor - 1])
 
+
+
     # remove states already visited
     possible_states = removeAlreadyVisitedStates(possible_states, states_visited)
 
     possible_states = removeIlligalStates(possible_states)
-    #
-    # print('generate possible states from')
-    # printState(state)
-    # print('found ' , len(possible_states), ' states')
+
+    print('generate possible states from')
+    printState(state)
+    print('found ' , len(possible_states), ' states')
+    print('after clensing')
+    all_correct_states_string = [stateToString(getState(i)) for i in range(0, 12)]
+    for state in possible_states:
+        current_state_string = stateToString(state)
+        for i, correct_state_string in enumerate(all_correct_states_string):
+            if correct_state_string == current_state_string:
+                printState(state)
+                print('FOUND A CORRECT STATE: ', i)
     # printStates(possible_states)
     # input('continue')
     # print('')
@@ -390,11 +399,6 @@ def main():
         new_states = []
 
         print('currently on step: ', steps)
-        print('checking the following states:')
-        printStates(states)
-        # input('ready to generate steps????')
-        print('')
-        print('')
 
         # generate next step new states
         for state in states:
@@ -428,7 +432,7 @@ def main():
         # input()
 
         # we have now taken yet another step for next iteration
-        checkValidStates(new_states, steps)
+        # checkValidStates(new_states, steps)
         steps += 1
 
     print('all states examined')
