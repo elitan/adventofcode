@@ -14,6 +14,17 @@ def generateStateIndex():
 def getState(n):
 
     floors = [[] for x in range(4)]
+    if n == 0:
+        floors[3] = ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+        floors[2] = ['.', '.', '.', '.', '.', '.', '.', '.', '.', 'TM']
+        floors[1] = ['.', '.', '.', '.', 'TG', 'RG', 'RM', 'CG', 'CM', '.']
+        floors[0] = ['SG', 'SM', 'PG', 'PM', '.', '.', '.', '.', '.', '.']
+        return floors, 0
+
+
+def getStateTestData(n):
+
+    floors = [[] for x in range(4)]
 
     if n == 0:
         floors[3] = ['.', '.', '.', '.']
@@ -199,11 +210,6 @@ def removeAlreadyVisitedStates(states, states_visited):
         # state is not visited
         if state_string not in states_visited:
             states_not_visited.append(state)
-            print('state added index: ', state_index)
-            print('state_string', state_string)
-        else:
-            print('state removed index: ', state_index)
-            print('state_string', state_string)
 
     return states_not_visited
 
@@ -345,25 +351,10 @@ def generatePossibleStates(state, states_visited):
                 possible_states.append([new_floors, elevator_floor - 1, generateStateIndex()])
 
 
-    print('generate possible states from ALL POSSIBLE STEPS')
-    printState(state)
-    print('found these states:')
-    printStates(possible_states)
-
     # remove states already visited
     possible_states = removeAlreadyVisitedStates(possible_states, states_visited)
 
-    print('generate possible states from, ALL DUPLICATES REMOVED')
-    printState(state)
-    print('found these states:')
-    printStates(possible_states)
-
     possible_states = removeIlligalStates(possible_states)
-
-    print('generate possible states from, ALL ILLEGAL REMOVED')
-    printState(state)
-    print('found these states:')
-    printStates(possible_states)
 
     return possible_states
 
@@ -376,11 +367,8 @@ def finishedState(state):
 
 
 def anyFinishedStates(states):
-    print('checking finished states:', len(states))
     for state in states:
         floors, elevator_floor, state_index = state
-
-        print('checking index: ', state_index)
 
         if finishedState(state):
             return True
@@ -399,10 +387,6 @@ def main():
     finished = False
 
     while not finished and len(new_states) != 0:
-
-        if steps == 15:
-            print('too many steps')
-            sys.exit()
 
         states = new_states
         new_states = []
