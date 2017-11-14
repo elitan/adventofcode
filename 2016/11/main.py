@@ -4,8 +4,25 @@ import itertools
 import copy
 import os
 
+global_state_counter = 0
+
+def generateStateIndex():
+    global global_state_counter
+    global_state_counter += 1
+    return global_state_counter
 
 def getState(n):
+
+    floors = [[] for x in range(4)]
+    if n == 0:
+        floors[3] = ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+        floors[2] = ['.', '.', '.', '.', '.', '.', '.', '.', '.', 'TM']
+        floors[1] = ['.', '.', '.', '.', 'TG', 'RG', 'RM', 'CG', 'CM', '.']
+        floors[0] = ['SG', 'SM', 'PG', 'PM', '.', '.', '.', '.', '.', '.']
+        return floors, 0
+
+
+def getStateTestData(n):
 
     floors = [[] for x in range(4)]
 
@@ -144,15 +161,13 @@ def getStartState():
 def printStates(states):
     for state in states:
         printState(state)
-        print('')
-        print('---')
-        print('')
 
 def printState(state):
 
-    floors, elivator_floor = state
-    floors_n = len(floors) - 1 # starting from 0
+    floors, elivator_floor, state_index = state
+    print('--- state id: {} ---'.format(state_index))
 
+    floors_n = len(floors) - 1 # starting from 0
     for i, x in enumerate(reversed(range(len(floors)))):
 
         current_floor = floors_n - i
@@ -166,6 +181,8 @@ def printState(state):
         for y in floors[x]:
             print('{}\t'.format(y), end='')
         print('')
+    print('---')
+    print('')
 
 def splitFloorsAndElivator(floors):
     new_floors = []
@@ -185,6 +202,8 @@ def removeAlreadyVisitedStates(states, states_visited):
 
     for state in states:
 
+        floors, elivator_floor, state_index = state
+
         # generate state string
         state_string = stateToString(state)
 
@@ -195,7 +214,7 @@ def removeAlreadyVisitedStates(states, states_visited):
     return states_not_visited
 
 def stateIsLegal(state):
-    floors, elevator_floor = state
+    floors, elevator_floor, state_index = state
 
     generators = set()
     microchips = set()
@@ -211,17 +230,12 @@ def stateIsLegal(state):
     generators_keep = set()
     microchips_keep = set()
 
-    # keep generators that are not connected
-    for generator_name in generators:
-        if generator_name not in microchips:
-            generators_keep.add(generator_name)
-
     # keep microships that are not connected
     for microchip_name in microchips:
         if microchip_name not in generators:
             microchips_keep.add(microchip_name)
 
-    if len(generators_keep) > 0 and len(microchips_keep) > 0:
+    if len(generators) > 0 and len(microchips_keep) > 0:
         return False
 
     return True
@@ -239,13 +253,15 @@ def removeIlligalStates(states):
 
 def stateToString(state):
 
-    floors, elevator_floor = state
+    floors, elevator_floor, state_index = state
 
     # set elevator floor n at the beginning
     state_string = '{}'.format(elevator_floor)
+    state_string += '#'
 
     for floor in floors:
         state_string += ''.join(floor)
+        state_string += '#'
 
     return state_string
 
@@ -263,8 +279,7 @@ def updateStatesVisited(states, states_visited):
 
 def generatePossibleStates(state, states_visited):
 
-
-    floors, elevator_floor = state
+    floors, elevator_floor, state_index = state
 
     max_floor = len(floors) - 1
     objects = []
@@ -294,7 +309,7 @@ def generatePossibleStates(state, states_visited):
             # generate new floors by move up
             new_floors[elevator_floor][objects_position[obj]] = '.'
             new_floors[elevator_floor + 1][objects_position[obj]] = obj
-            possible_states.append([new_floors, elevator_floor + 1])
+            possible_states.append([new_floors, elevator_floor + 1, generateStateIndex()])
 
         # move down
         # safe to move down?
@@ -304,7 +319,7 @@ def generatePossibleStates(state, states_visited):
             # generate new floors by move down
             new_floors[elevator_floor][objects_position[obj]] = '.'
             new_floors[elevator_floor - 1][objects_position[obj]] = obj
-            possible_states.append([new_floors, elevator_floor - 1])
+            possible_states.append([new_floors, elevator_floor - 1, generateStateIndex()])
 
     # if you should try to carry 2 objects, only if there are two
     # objects at the current floor
@@ -321,7 +336,7 @@ def generatePossibleStates(state, states_visited):
                     new_floors[elevator_floor + 1][objects_position[obj]] = obj
 
                 # add the new state to possible states
-                possible_states.append([new_floors, elevator_floor + 1])
+                possible_states.append([new_floors, elevator_floor + 1, generateStateIndex()])
 
             # safe to move down?
             if elevator_floor != 0:
@@ -333,8 +348,7 @@ def generatePossibleStates(state, states_visited):
                     new_floors[elevator_floor - 1][objects_position[obj]] = obj
 
                 # add the new state to possible states
-                possible_states.append([new_floors, elevator_floor - 1])
-
+                possible_states.append([new_floors, elevator_floor - 1, generateStateIndex()])
 
 
     # remove states already visited
@@ -342,39 +356,22 @@ def generatePossibleStates(state, states_visited):
 
     possible_states = removeIlligalStates(possible_states)
 
-    print('generate possible states from')
-    printState(state)
-    print('found ' , len(possible_states), ' states')
-    print('after clensing')
-    all_correct_states_string = [stateToString(getState(i)) for i in range(0, 12)]
-    for state in possible_states:
-        current_state_string = stateToString(state)
-        for i, correct_state_string in enumerate(all_correct_states_string):
-            if correct_state_string == current_state_string:
-                printState(state)
-                print('FOUND A CORRECT STATE: ', i)
-    # printStates(possible_states)
-    # input('continue')
-    # print('')
-    # print('')
-    # print('')
-    # print('')
-    # print('')
-
-
     return possible_states
+
+def finishedState(state):
+    floors, elevator_floor, state_index = state
+    for pos in floors[-1]:
+        if pos == '.':
+            return False
+    return True
+
 
 def anyFinishedStates(states):
     for state in states:
-        floors, elevator_floor = state
+        floors, elevator_floor, state_index = state
 
-        # check top floor for no '.'
-        for pos in floors[-1]:
-            if pos == '.':
-                return False
-
-        # test OK. no '.''s found. State is finished
-        return True
+        if finishedState(state):
+            return True
 
     # if no states
     return False
@@ -383,7 +380,7 @@ def anyFinishedStates(states):
 def main():
 
     steps = 0
-    new_states = [getState(steps)]
+    new_states = [getState(steps) + (generateStateIndex(), )]
     states_visited = set()
     states_visited = updateStatesVisited(new_states, states_visited)
 
@@ -391,14 +388,14 @@ def main():
 
     while not finished and len(new_states) != 0:
 
-        if steps == 15:
-            print('too many steps')
-            sys.exit()
-
         states = new_states
         new_states = []
 
+        print('')
+        print('')
         print('currently on step: ', steps)
+        print('')
+        print('')
 
         # generate next step new states
         for state in states:
@@ -421,8 +418,9 @@ def main():
             #     print(sv)
 
             # for each state in new states tmp, add to new states
-            for state in new_states_tmp:
-                new_states.append(state)
+            for state_tmp in new_states_tmp:
+                new_states.append(state_tmp)
+                floors, elevator_floor, state_index = state
 
         # print('new states for next step:', len(new_states))
         # print('press enter to show states')
@@ -431,8 +429,8 @@ def main():
         # print('press enter to go to next step')
         # input()
 
-        # we have now taken yet another step for next iteration
         # checkValidStates(new_states, steps)
+        # we have now taken yet another step for next iteration
         steps += 1
 
     print('all states examined')
