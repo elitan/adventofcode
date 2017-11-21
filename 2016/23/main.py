@@ -4,7 +4,7 @@ import sys
 re_cpy = re.compile(r'cpy (\d+|\w+) (\w+)')
 re_inc = re.compile(r'inc (\w+)')
 re_dec = re.compile(r'dec (\w+)')
-re_jnz = re.compile(r'jnz (\w+) (-?\d+)')
+re_jnz = re.compile(r'jnz (\d+|\w+) (-?\d+)')
 re_tgl = re.compile(r'tgl (\w+)')
 
 with open('input', 'r') as f:
