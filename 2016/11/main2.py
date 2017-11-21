@@ -88,6 +88,16 @@ def generatePossibleStates(state, states_visited):
 
         # move down
         if elevator != 0:
+
+            # dont move items down if the floors below the current elevator
+            # position is empty
+            floor_sum = 0
+            for x in range(elevator):
+                floor_sum += len(base_floors[x])
+
+            if floor_sum == 0:
+                continue
+
             tmp_floors = copy.deepcopy(base_floors)
             tmp_floors[elevator - 1].append(obj)
             tmp_floors[elevator].remove(obj)
@@ -108,6 +118,16 @@ def generatePossibleStates(state, states_visited):
 
         # move down
         if elevator != 0:
+
+            # dont move items down if the floors below the current elevator
+            # position is empty
+            floor_sum = 0
+            for x in range(elevator):
+                floor_sum += len(base_floors[x])
+
+            if floor_sum == 0:
+                continue
+
             tmp_floors = copy.deepcopy(base_floors)
             tmp_floors[elevator - 1] = tmp_floors[elevator - 1] + list(combination)
             tmp_floors[elevator] = set(tmp_floors[elevator]) - set(combination)
@@ -135,7 +155,7 @@ def main():
     steps = 0
     elevator = 0
     floors = (('HM', 'LM'), ('HG',), ('LG',), ())
-    floors = (('SG', 'SM', 'PG', 'PM'), ('TG', 'RG', 'RM', 'CG', 'CM'), ('TM', ), ())
+    floors = (('SG', 'SM', 'PG', 'PM', 'EG', 'EM', 'DG', 'DM'), ('TG', 'RG', 'RM', 'CG', 'CM'), ('TM', ), ())
     first_state = (elevator, (floors))
 
     states_visited.add(first_state)
