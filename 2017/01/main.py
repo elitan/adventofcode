@@ -1,29 +1,19 @@
-
-def FrontToBack(number):
-
-    print(number[0])
-    print(number[-1])
-
-    if number[0] != number[-1]:
-        return number
-
-    last_digit = number[-1]
-    # how many digits to move?
-    for i, digit in enumerate(number):
-        print(digit, i)
-
-    return number
-
 def main():
 
     with open('in') as f:
         number = f.readline().rstrip()
 
-    number = FrontToBack(number)
+    s = 0
+    for d_index, d in enumerate(number):
+        if d == number[(d_index + 1) % len(number)]:
+            s += int(d)
+    print('1: ', s)
 
-    print(number)
-
-    # move number from back to front if same
+    s = 0
+    for d_index, d in enumerate(number):
+        if d == number[(d_index + len(number) / 2) % len(number)]:
+            s += int(d)
+    print('2: ', s)
 
 
 if __name__ == '__main__':
