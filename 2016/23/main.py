@@ -4,14 +4,14 @@ import sys
 re_cpy = re.compile(r'cpy (\d+|\w+) (\w+)')
 re_inc = re.compile(r'inc (\w+)')
 re_dec = re.compile(r'dec (\w+)')
-re_jnz = re.compile(r'jnz (\d+|\w+) (-?\d+)')
+re_jnz = re.compile(r'jnz (\d+|\w+) (\w+|\d+)')
 re_tgl = re.compile(r'tgl (\w+)')
 
 with open('input', 'r') as f:
 	instructions  = [line.rstrip() for line in f]
 
 register = {
-	'a': 7,
+	'a': 0,
 	'b': 0,
 	'c': 0,
 	'd': 0,
@@ -90,15 +90,23 @@ while fp < len(instructions):
 		register[reg] -= 1
 
 	if instruction.startswith('jnz'):
+		print('jnz!')
 		try:
 			a, rel = re.findall(re_jnz, instruction)[0]
 		except:
 			fp += 1
+			print(instruction)
+			print('exception')
 			continue
 		if a.isdigit():
 			c = int(a)
 		else:
 			c = register[a]
+
+		if rel.isdigit():
+			rel = int(rel)
+		else:
+			rel = register[rel]
 
 		if c != 0:
 			fp += int(rel)
@@ -110,9 +118,11 @@ while fp < len(instructions):
 
 	print(instruction)
 	print(register)
-	print(fp)
+	print('fp: ', fp)
+	print('')
 	for instruction in instructions:
 		print(instruction)
+	print('')
 	# input('next tick')
 	fp += 1
 
