@@ -1,47 +1,25 @@
+# thx thomasjevskij
+from collections import defaultdict
+
 def getStressTestData(nodes, loc):
 
     row, col = loc
 
     data = 0
 
-
     # bottom left, bottom, bottom right
-    try:
-        data += nodes[(row + 1, col - 1)]
-    except:
-        pass
-    try:
-        data += nodes[(row + 1, col)]
-    except:
-        pass
-    try:
-        data += nodes[(row + 1, col + 1)]
-    except:
-        pass
+    data += nodes[(row + 1, col - 1)]
+    data += nodes[(row + 1, col)]
+    data += nodes[(row + 1, col + 1)]
 
     # left, right
-    try:
-        data += nodes[(row, col + 1)]
-    except:
-        pass
-    try:
-        data += nodes[(row, col - 1)]
-    except:
-        pass
+    data += nodes[(row, col + 1)]
+    data += nodes[(row, col - 1)]
 
     # top left, top, top right
-    try:
-        data += nodes[(row - 1, col - 1)]
-    except:
-        pass
-    try:
-        data += nodes[(row - 1, col)]
-    except:
-        pass
-    try:
-        data += nodes[(row - 1, col + 1)]
-    except:
-        pass
+    data += nodes[(row - 1, col - 1)]
+    data += nodes[(row - 1, col)]
+    data += nodes[(row - 1, col + 1)]
 
     return data
 
@@ -50,29 +28,28 @@ def getNextMove(nodes, loc):
     row, col = loc
 
     # move right
-    if (row - 1, col) in nodes and (row, col + 1) not in nodes:
+    if nodes[(row - 1, col)] != 0 and nodes[(row, col + 1)] == 0:
         return (row, col + 1)
 
     # move up
-    if (row, col -1) in nodes and (row - 1, col) not in nodes:
+    if nodes[(row, col - 1)] != 0 and nodes[(row - 1, col)] == 0:
         return (row - 1, col)
 
     # move left
-    if (row + 1, col) in nodes and (row, col - 1) not in nodes:
+    if nodes[(row + 1, col)] != 0 and nodes[(row, col - 1)] == 0:
         return (row, col - 1)
 
     # move down
-    if (row, col + 1) in nodes and (row + 1, col) not in nodes:
+    if nodes[(row, col + 1)] != 0 and nodes[(row + 1, col)] == 0:
         return (row + 1, col)
 
 def part1(in_data):
 
-    # init
-    nodes = {}
+    # init first and second element
+    nodes = defaultdict(int)
     n = 1
     loc = (0, 0)
     nodes[loc] = n
-
 
     n += 1
     loc = (0, 1)
@@ -92,11 +69,10 @@ def part1(in_data):
 
 def part2(in_data):
 
-    # init
-    nodes = {}
+    # init first and second element
+    nodes = defaultdict(int)
     loc = (0, 0)
     nodes[loc] = 1
-
 
     loc = (0, 1)
     nodes[loc] = 1
