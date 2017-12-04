@@ -31,7 +31,6 @@ def solve():
 
     for line in fh:
 
-        # get passphrase
         passphrase = line.rstrip()
 
         if validPassphraseP1(passphrase):
