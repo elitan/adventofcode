@@ -2,21 +2,7 @@ def validPassphraseP1(passphrase):
 
     passphrase = passphrase.split(' ')
 
-    words = set()
-
-    for word in passphrase:
-        words_size = len(words)
-
-        # add the word to words set.
-        # if the word was already in the words set, the length is the same as
-        # before
-        words.add(word)
-
-        # test if invalid passphrase
-        if words_size == len(words):
-            return False
-
-    return True
+    return len(passphrase) == len(set(passphrase))
 
 def validPassphraseP2(passphrase):
 
