@@ -1,12 +1,12 @@
 # part 1
-jump_offsets = []
-for n in open('input'):
-    jump_offsets.append(int(n.rstrip()))
+# read in lines as int list
+jump_offsets = [ int(x.rstrip()) for x in open('input') ]
 
 current_i = 0
 new_i = 0
 steps = 0
 
+# take steps as long we are inside the maze
 while new_i > 0 and new_i < len(jump_offsets):
 
     # jump tmp
@@ -24,9 +24,8 @@ print(steps)
 
 
 # part 2
-jump_offsets = []
-for n in open('input'):
-    jump_offsets.append(int(n.rstrip()))
+# read in lines as int list
+jump_offsets = [ int(x.rstrip()) for x in open('input') ]
 
 current_i = 0
 new_i = 0
