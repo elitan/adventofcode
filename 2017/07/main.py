@@ -18,7 +18,7 @@ def part1(input_file_name):
 
     return list(nodes - below_nodes)[0]
 
-def getWeight(nodes, current_node_name, depth_weights, depth):
+def getWeight(nodes, current_node_name):
 
     weight, children = nodes[current_node_name]
 
@@ -28,7 +28,7 @@ def getWeight(nodes, current_node_name, depth_weights, depth):
     child_weights_dict = {}
 
     for child in children:
-        w = getWeight(nodes, child, depth_weights, (depth + 1))
+        w = getWeight(nodes, child)
         total_weight += w
         child_weights.append(w)
         child_weights_dict[child] = w
@@ -64,8 +64,6 @@ def getWeight(nodes, current_node_name, depth_weights, depth):
 
         return ret
 
-    depth_weights[depth].append(total_weight)
-
     return total_weight
 
 def part2(input_file_name):
@@ -90,9 +88,7 @@ def part2(input_file_name):
 
     start_node_name = part1(input_file_name)
 
-    depth_weights = defaultdict(list)
-
-    weight = getWeight(nodes, start_node_name, depth_weights, 0)
+    weight = getWeight(nodes, start_node_name)
 
 
 def main():
