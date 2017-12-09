@@ -32,7 +32,7 @@ def part1():
 
     for c in s:
 
-        if c not in ['{', '}']:
+        if c not in '{}':
             continue
 
         # one depth 'down' in the recursion
