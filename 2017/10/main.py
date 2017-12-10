@@ -3,8 +3,11 @@ from functools import reduce
 
 class CircularList:
 
-    def __init__(self):
+    def __init__(self, init_list = []):
         self.list = []
+
+        for value in init_list:
+            self.list.append(value)
 
     def append(self, value):
         self.list.append(value)
@@ -89,9 +92,7 @@ def knot_hash(circular_list, input_lengths, current_position = 0, skip_size = 0)
 
 def part1(input_file_name, list_length):
 
-    circular_list = CircularList()
-    for x in range(list_length):
-        circular_list.append(x)
+    circular_list = CircularList([x for x in range(list_length)])
 
     # read input lengths from file
     input_lengths = [int(x) for x in open(input_file_name).readline().split(',')]
@@ -111,9 +112,7 @@ def part2(input_file_name, list_length):
 
     input_lengths += list_sufix
 
-    sparse_hash = CircularList()
-    for x in range(list_length):
-        sparse_hash.append(x)
+    sparse_hash = CircularList([x for x in range(list_length)])
 
     current_position = 0
     skip_size = 0
