@@ -1,4 +1,5 @@
 import sys
+from functools import reduce
 
 class CircularList:
 
@@ -65,20 +66,7 @@ class CircularList:
     def __repr__(self):
         return self.__str__()
 
-def main():
-
-    input_file_name = 'input'
-    input_list_length = 256
-
-    circular_list = CircularList()
-
-    # read input lengths from file
-    input_lengths = [int(x) for x in open(input_file_name).readline().split(',')]
-    for x in range(input_list_length):
-        circular_list.append(x)
-
-    current_position = 0
-    skip_size = 0
+def knot_hash(circular_list, input_lengths, current_position = 0, skip_size = 0):
 
     for current_length in input_lengths:
 
@@ -97,9 +85,63 @@ def main():
         current_position += current_length + skip_size
         skip_size += 1
 
-    print('answer: ', circular_list[0] * circular_list[1])
+    return circular_list, current_position, skip_size
+
+def part1(input_file_name, list_length):
+
+    circular_list = CircularList()
+    for x in range(list_length):
+        circular_list.append(x)
+
+    # read input lengths from file
+    input_lengths = [int(x) for x in open(input_file_name).readline().split(',')]
+
+    current_position = 0
+    skip_size = 0
+
+    cl = knot_hash(circular_list, input_lengths, 0, 0)[0]
+
+    return cl[0] * cl[1]
+
+def part2(input_file_name, list_length):
+
+    list_sufix = [17, 31, 73, 47, 23]
+
+    input_lengths = [ord(x) for x in open(input_file_name).readline().strip()]
+
+    input_lengths += list_sufix
+
+    sparse_hash = CircularList()
+    for x in range(list_length):
+        sparse_hash.append(x)
+
+    current_position = 0
+    skip_size = 0
+    for x in range(64):
+
+        sparse_hash, current_position, skip_size = knot_hash(sparse_hash, input_lengths, current_position, skip_size)
 
 
+    dense_hash = []
+    for i in range(16):
+        pos = i * 16
+
+        xor_n = reduce(lambda x, y: x^y, sparse_hash[pos:pos+16])
+
+        hex_str = hex(xor_n)[2:].zfill(2)
+
+        dense_hash.append(hex_str)
+
+    return ''.join(dense_hash)
+
+
+def main():
+
+    input_file_name = 'input'
+    list_length = 256
+
+    print('part 1: ', part1(input_file_name, list_length))
+    print('part 2: ', part2(input_file_name, list_length))
 
 if __name__ == '__main__':
     main()
