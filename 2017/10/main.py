@@ -97,29 +97,24 @@ def part1(input_file_name, list_length):
     # read input lengths from file
     input_lengths = [int(x) for x in open(input_file_name).readline().split(',')]
 
-    current_position = 0
-    skip_size = 0
-
     cl = knot_hash(circular_list, input_lengths, 0, 0)[0]
 
     return cl[0] * cl[1]
 
 def part2(input_file_name, list_length):
 
-    list_sufix = [17, 31, 73, 47, 23]
-
     input_lengths = [ord(x) for x in open(input_file_name).readline().strip()]
 
-    input_lengths += list_sufix
+    input_lengths += [17, 31, 73, 47, 23]
 
     sparse_hash = CircularList([x for x in range(list_length)])
 
+    # run hash function 64 times and keep current position and skip size
     current_position = 0
     skip_size = 0
     for x in range(64):
 
         sparse_hash, current_position, skip_size = knot_hash(sparse_hash, input_lengths, current_position, skip_size)
-
 
     dense_hash = []
     for i in range(16):
