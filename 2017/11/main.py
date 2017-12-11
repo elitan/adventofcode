@@ -26,14 +26,12 @@ def substitute(s, direction_steps):
     direction_steps[c] += c_additions
 
 
-def part1(input_file_name):
-
-    input_str = open(input_file_name).readline().strip().split(',')
+def steps(walk):
 
     direction_steps = defaultdict(int)
 
-    for direction in list(set(input_str)):
-        direction_steps[direction] = input_str.count(direction)
+    for direction in list(set(walk)):
+        direction_steps[direction] = walk.count(direction)
 
     # calcle outs
     cancle_outs = [
@@ -63,14 +61,34 @@ def part1(input_file_name):
 
     return steps
 
+def part1(input_file_name):
+
+    walk = open(input_file_name).readline().strip().split(',')
+
+    return steps(walk)
+
+
 def part2(input_file_name):
-    pass
+
+    walk = open(input_file_name).readline().strip().split(',')
+
+    max_steps = 0
+
+    for x in range(1, len(walk)):
+        tmp_walk = walk[0:x]
+
+        max_steps = max(max_steps, steps(tmp_walk))
+
+    return max_steps
 
 
 def main():
 
     input_file_name = 'in'
+
     print('part1: ', part1(input_file_name))
     print('part2: ', part2(input_file_name))
+
+
 if __name__ == '__main__':
     main()
