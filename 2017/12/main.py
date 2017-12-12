@@ -16,12 +16,16 @@ def getStartPid(connections, groups):
 
 def addProgramToGroup(pid, connections, group):
 
+    # add this particular pid
     group.add(pid)
 
+    # add this pid connected pids (if any)
     for connected_pid in connections[pid]:
 
+        # only add if the pid is not already in the group
         if connected_pid not in group:
-            group.add(connected_pid)
+
+            # add recursively
             addProgramToGroup(connected_pid, connections, group)
 
 def part1(connections):
@@ -44,6 +48,7 @@ def part2(connections):
         # add an empty set for this new group
         groups.append(set())
 
+        # start adding pids recursively
         addProgramToGroup(start_pid, connections, groups[-1])
 
     return len(groups)
