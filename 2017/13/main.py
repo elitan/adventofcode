@@ -1,48 +1,62 @@
 import sys
 
-def getSeverity(pc_offset, firewall, firewall_depth):
+def severityHit(pc_offset, firewall, firewall_depth):
 
-    # calc severity
-    severity_hits = 0
-    severity = 0
     range_index = 0
     for pc in range(pc_offset, firewall_depth + pc_offset + 1):
 
-        # check if there is a firewall here. pc is also what range we are at
         if range_index not in firewall:
             range_index += 1
             continue
 
         fw_layers, fw_mod = firewall[range_index]
 
+        # fw at top position?
         if pc % fw_mod == 0:
-            severity += range_index * fw_layers
-            severity_hits += 1
+            return True
 
         range_index += 1
 
-    return severity, severity_hits
+    return False
+
+def getSeverity(pc_offset, firewall, firewall_depth):
+
+    # calc severity
+    severity_hits = 0
+    severity = 0
+    range_index = 0
+
+    for pc in range(pc_offset, firewall_depth + pc_offset + 1):
+
+        if range_index not in firewall:
+            range_index += 1
+            continue
+
+        fw_layers, fw_mod = firewall[range_index]
+
+        # fw at top position?
+        if pc % fw_mod == 0:
+            severity += range_index * fw_layers
+
+        range_index += 1
+
+    return severity
 
 
 def part1(firewall, firewall_depth):
 
-    severity, severity_hits = getSeverity(0, firewall, firewall_depth);
+    severity = getSeverity(0, firewall, firewall_depth);
 
     return severity
 
 def part2(firewall, firewall_depth):
 
-    pc_delay = 0
-    while True:
+    pc_offset = 0
 
-        # not the best, getSeverity could just return once severity_hits is > 0
-        # but it was okey anywayz
-        severity, severity_hits = getSeverity(pc_delay, firewall, firewall_depth);
+    while severityHit(pc_offset, firewall, firewall_depth):
+        pc_offset += 1
 
-        if severity_hits == 0:
-            return pc_delay
-
-        pc_delay += 1
+    return pc_offset
 
 def main():
 
@@ -56,6 +70,7 @@ def main():
 
         firewall_depth = max(firewall_depth, depth)
 
+        # fw will be at top position every mod tick
         mod = 2 + (layers - 2) * 2
 
         firewall[depth] = (layers, mod)
