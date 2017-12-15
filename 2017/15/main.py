@@ -4,11 +4,11 @@ def part1(a, b):
 
     for i in range(40*10**6):
 
-        a = a * 16807 %  2147483647
-        b = b * 48271 %  2147483647
+        a = a * 16807 % 2147483647
+        b = b * 48271 % 2147483647
 
-        # 65535 is 1111 1111 1111 1111 in base 2 (binary)
-        points += a & 65535 == b & 65535
+        # 0xffff thx reddit
+        points += a & 0xffff == b & 0xffff
 
     return points
 
@@ -18,15 +18,15 @@ def part2(a, b):
 
     for i in range(5*10**6):
 
-        a = a * 16807 %  2147483647
+        a = a * 16807 % 2147483647
         while a % 4 != 0:
-            a = a * 16807 %  2147483647
+            a = a * 16807 % 2147483647
 
-        b = b * 48271 %  2147483647
+        b = b * 48271 % 2147483647
         while b % 8 != 0:
-            b = b * 48271 %  2147483647
+            b = b * 48271 % 2147483647
 
-        points += a & 65535 == b & 65535
+        points += a & 0xffff == b & 0xffff
 
     return points
 
