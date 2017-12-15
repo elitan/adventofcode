@@ -136,10 +136,12 @@ def main():
 
         bin_hash = dense_hash_to_bin(dense_hash)
 
+        # get coordinates for p2
         for col, bit in enumerate(bin_hash):
             if bit == '1':
                 ones.append((row, col))
 
+        # p1 count '1'
         bits_1 += bin_hash.count('1')
 
     print('part 1: ', bits_1)
@@ -147,13 +149,19 @@ def main():
 
     current_group = []
     i = 0
+
     while ones:
 
+        # get a starting point for a group
         current_group.append(ones.pop())
 
+        # add new coordinates to this group and remove searched
+        # search as long as there are coordintes to search
         while current_group:
+
             row, col= current_group.pop()
 
+            # look right, left, up, down
             if (row, col + 1) in ones:
                 current_group.append((row, col + 1))
                 ones.remove((row, col + 1))
