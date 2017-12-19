@@ -45,24 +45,22 @@ def main():
     position = start_position
     direction = 'down'
 
-    try:
-        while True:
+    while position in grid:
 
-            # actual AoC stuff
-            if grid[position].isalpha():
-                letters.append(grid[position])
-            steps += 1
+        # switch direction?
+        if grid[position] == '+':
+            direction = getNewDirection(position, direction, grid)
 
-            # get next positoin
-            position = getNewPosition(position, direction)
+        # actual AoC stuff
+        if grid[position].isalpha():
+            letters.append(grid[position])
+        steps += 1
 
-            # switch direction?
-            if grid[position] == '+':
-                direction = getNewDirection(position, direction, grid)
+        # get next position
+        position = getNewPosition(position, direction)
 
-    except: #YOLO
-        print(''.join(letters))
-        print(steps)
+    print(''.join(letters))
+    print(steps)
 
 
 if __name__ == '__main__':
