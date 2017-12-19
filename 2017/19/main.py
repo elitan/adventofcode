@@ -48,6 +48,7 @@ def main():
     try:
         while True:
 
+            # actual AoC stuff
             if grid[position].isalpha():
                 letters.append(grid[position])
             steps += 1
@@ -55,10 +56,10 @@ def main():
             # get next positoin
             position = getNewPosition(position, direction)
 
-            if grid[position] in ['|', '-']:
-                continue # to next position
-            elif grid[position] == '+':
+            # switch direction?
+            if grid[position] == '+':
                 direction = getNewDirection(position, direction, grid)
+
     except: #YOLO
         print(''.join(letters))
         print(steps)
