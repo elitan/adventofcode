@@ -17,7 +17,7 @@ def transform(sub_grid, trans_map):
 		sub_grid = np.rot90(sub_grid)
 
 	# flip
-	sub_grid = np.flipud(sub_grid)
+	sub_grid = np.flip(sub_grid)
 
 	# look and rotate
 	for _ in range(4):
