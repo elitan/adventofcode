@@ -1,7 +1,6 @@
 import sys
 import re
 from collections import defaultdict, Counter
-import time
 
 def main():
 
@@ -34,7 +33,6 @@ def main():
                 if guard_sleep_start_minute == 60:
                     guard_sleep_start_minute = 0
                     guard_sleep_start_hour += 1
-            time.sleep(1)
 
 
     # p1
