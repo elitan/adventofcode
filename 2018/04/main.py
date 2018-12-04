@@ -55,6 +55,7 @@ def main():
             sleepiest_minute = m[0]
             sleepiest_guard_id = guard_id
 
+    # incorrect: 106224
     print(sleepiest_guard_id * sleepiest_minute)
 
 if __name__ == '__main__':
