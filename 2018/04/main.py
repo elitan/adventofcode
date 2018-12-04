@@ -55,7 +55,7 @@ def main():
             sleepiest_minute = m[0]
             sleepiest_guard_id = guard_id
 
-    print(sleepiest_guard_id * sleepiest_minutes)
+    print(sleepiest_guard_id * sleepiest_minute)
 
 if __name__ == '__main__':
     main()
