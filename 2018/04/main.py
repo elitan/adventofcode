@@ -49,11 +49,13 @@ def main():
     # p2
     sleepiest_guard_id = None
     sleepiest_minute = 0
+    sleepiest_minute_n = 0
     for guard_id in guard_ids:
         if len(guard_data[guard_id]) == 0:
             continue
         m = Counter(guard_data[guard_id]).most_common(1)[0]
-        if m[0] > sleepiest_minute:
+        if m[1] >= sleepiest_minute_n:
+            sleepiest_minute_n = m[1]
             sleepiest_minute = m[0]
             sleepiest_guard_id = guard_id
 
