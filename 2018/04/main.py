@@ -1,6 +1,7 @@
 import sys
 import re
 from collections import defaultdict, Counter
+import time
 
 def main():
 
@@ -10,7 +11,6 @@ def main():
     lines = [re.findall(regex_parse_lines, x.rstrip())[0] for x in sys.stdin]
     lines.sort(key=lambda x: "".join([x[0], x[1], x[2], x[3], x[4]]))
 
-    guard_sleeping = False
     guard_sleep_start_hour = None
     guard_sleep_start_minute = None
     guard_data = defaultdict(list)
@@ -23,14 +23,18 @@ def main():
             guard_ids.add(guard_id)
 
         elif msg == 'falls asleep':
-            guard_sleeping = True
             guard_sleep_start_hour = int(hour)
             guard_sleep_start_minute = int(minute)
 
         elif msg == 'wakes up':
-            guard_sleeping = False
-            for i in range(guard_sleep_start_minute, int(minute)):
-                guard_data[guard_id].append(i)
+            hour, minute = int(hour), int(minute)
+            while guard_sleep_start_hour != hour or guard_sleep_start_minute != minute:
+                guard_data[guard_id].append(guard_sleep_start_minute)
+                guard_sleep_start_minute += 1
+                if guard_sleep_start_minute == 60:
+                    guard_sleep_start_minute = 0
+                    guard_sleep_start_hour += 1
+            time.sleep(1)
 
 
     # p1
