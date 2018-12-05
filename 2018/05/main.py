@@ -3,10 +3,7 @@ import sys
 def doMutation(s, start_i):
     for i in range(start_i, len(s) - 1):
         if abs(s[i] - s[i+1]) == 32:
-            try:
-                s = s[:i] + s[i+2:]
-            except:
-                s = s[:i] # if index out of range...
+            del s[i:i+2]
             return True, s, max(i-1, 0)
     return False, s, None
 
