@@ -34,9 +34,9 @@ class List:
 
 class Node:
 	def __init__(self, value):
-			self.value = value
-			self.left = self
-			self.right = self
+		self.value = value
+		self.left = self
+		self.right = self
 
 
 i = 0
