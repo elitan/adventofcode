@@ -1,3 +1,4 @@
+# wrong answer 16,52
 import re
 import sys
 
@@ -62,37 +63,39 @@ def main():
 			grid.append(list(line.rstrip()))
 			for x, c in enumerate(line.rstrip()):
 				if c in ['^', '>', 'v', '<']:
-					print('found x: ', x, 'y: ', y, 'c: ', c)
+					# print('found x: ', x, 'y: ', y, 'c: ', c)
 					carts[(x, y)] = [directions[c], 0]
 					grid[y][x] = '.'
 
 	while True:
 
-		for y, row in enumerate(grid):
-			for x, grid_c in enumerate(row):
-				try:
-					c = carts[(x, y)][0]
-				except:
-					c = grid_c
-				print(c, end='')
-			print('')
+		# for y, row in enumerate(grid):
+		# 	for x, grid_c in enumerate(row):
+		# 		try:
+		# 			c = carts[(x, y)][0]
+		# 		except:
+		# 			c = grid_c
+		# 		print(c, end='')
+		# 	print('')
 
 		new_carts_dict = {}
 		carts_list = list(carts.items())
 		carts_list.sort()
-		next_coordinates = set()
+		crash_coordinates = set(list(carts.keys()))
+		print('crash_coordinates: ', crash_coordinates)
 
 		for coordinate, data in carts_list:
 			x, y = coordinate
+			crash_coordinates.remove((x, y))
 			direction, intersections = data
 
 			next_x, next_y = getNextCoordinate(x, y, direction)
-			if (next_x, next_y) in next_coordinates:
+			if (next_x, next_y) in crash_coordinates:
 				print('found crash:')
 				print((next_x, next_y))
-				sys.exit()
+				input()
 			else:
-				next_coordinates.add((next_x, next_y))
+				crash_coordinates.add((next_x, next_y))
 
 			if grid[next_y][next_x] in ['/', '\\']:
 				direction = getNewTurnDirection(direction, grid[next_y][next_x])
@@ -103,7 +106,6 @@ def main():
 			new_carts_dict[(next_x, next_y)] = [direction, intersections]
 
 		carts = new_carts_dict
-		input()
 
 
 if __name__ == '__main__':
