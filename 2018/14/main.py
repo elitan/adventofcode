@@ -1,8 +1,3 @@
-# wrong 0529031614
-
-# p2
-# wrong 552860567
-
 import re
 import sys
 
@@ -57,8 +52,6 @@ def part2():
 		recepies_len = len(recepies)
 		a_index = (a_index + recepies[a_index] + 1) % recepies_len
 		b_index = (b_index + recepies[b_index] + 1) % recepies_len
-
-
 
 
 def main():
