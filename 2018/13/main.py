@@ -1,4 +1,3 @@
-# wrong answer 16,52
 import re
 import sys
 
@@ -69,33 +68,28 @@ def main():
 
 	while True:
 
-		# for y, row in enumerate(grid):
-		# 	for x, grid_c in enumerate(row):
-		# 		try:
-		# 			c = carts[(x, y)][0]
-		# 		except:
-		# 			c = grid_c
-		# 		print(c, end='')
-		# 	print('')
-
 		new_carts_dict = {}
 		carts_list = list(carts.items())
 		carts_list.sort()
-		crash_coordinates = set(list(carts.keys()))
-		print('crash_coordinates: ', crash_coordinates)
 
 		for coordinate, data in carts_list:
 			x, y = coordinate
-			crash_coordinates.remove((x, y))
+
+			if (x, y) not in carts:
+				continue
+
+			del carts[(x, y)]
+
 			direction, intersections = data
 
 			next_x, next_y = getNextCoordinate(x, y, direction)
-			if (next_x, next_y) in crash_coordinates:
-				print('found crash:')
-				print((next_x, next_y))
-				input()
-			else:
-				crash_coordinates.add((next_x, next_y))
+
+			if (next_x, next_y) in new_carts_dict:
+				del new_carts_dict[(next_x, next_y)]
+				continue
+			if (next_x, next_y) in carts:
+				del carts[(next_x, next_y)]
+				continue
 
 			if grid[next_y][next_x] in ['/', '\\']:
 				direction = getNewTurnDirection(direction, grid[next_y][next_x])
@@ -105,7 +99,30 @@ def main():
 
 			new_carts_dict[(next_x, next_y)] = [direction, intersections]
 
+		if len(new_carts_dict) == 1:
+			print(new_carts_dict)
+			sys.exit()
+
 		carts = new_carts_dict
+
+		# input()
+		# for y, row in enumerate(grid):
+		# 	for x, grid_c in enumerate(row):
+		# 		try:
+		# 			c_nr = carts[(x, y)][0]
+		# 			if c_nr == 0:
+		# 				c = '^'
+		# 			elif c_nr == 1:
+		# 				c = '>'
+		# 			elif c_nr == 2:
+		# 				c = 'v'
+		# 			elif c_nr == 3:
+		# 				c = '<'
+		# 		except:
+		# 				c = grid_c
+		# 		print(c, end='')
+		# 	print('')
+		# input()
 
 
 if __name__ == '__main__':
