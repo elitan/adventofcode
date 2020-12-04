@@ -1,1 +1,1 @@
-# adventofcode-15
+# Advent of Code solutions
