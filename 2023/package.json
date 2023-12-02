@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "2": "ts-node src/02/main.ts",
     "11": "ts-node src/01/1.ts",
-    "12": "ts-node src/01/2.ts"
+    "12": "ts-node src/01/2.ts",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +16,8 @@
     "@types/node": "^20.10.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
+  },
+  "devDependencies": {
+    "vitest": "^0.34.6"
   }
 }
